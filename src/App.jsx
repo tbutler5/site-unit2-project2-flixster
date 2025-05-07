@@ -1,10 +1,20 @@
-import { useState } from 'react'
-import './App.css'
+import { useState } from "react";
+import MovieList from './components/MovieList';
+import SearchBar from './components/SearchBar';
+import './App.css';
 
 const App = () => {
-  <div className="App">
-    
-  </div>
-}
+  const [view, setView] = useState("nowPlaying");
 
-export default App
+  return (
+    <div className="App">
+        <div>
+          <button onClick={() => setView("nowPlaying")}>Now Playing</button>
+          <button onClick={() => setView("search")}>Search</button>
+        </div>
+        {view === "nowPlaying" ? <MovieList /> : <SearchBar />}
+    </div>
+  );
+};
+
+export default App;
