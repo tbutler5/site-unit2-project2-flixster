@@ -6,20 +6,44 @@ const MovieList = () => {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [sortBy, setSortBy] = useState('');
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   const apiKey = import.meta.env.VITE_API_KEY;
 
-  useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}`)
-      .then(res => res.json())
-      .then(data => setMovies(data.results));
-  }, []);
-
-  const handleMovieClick = async (movieId) => {
-    const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`);
-    const data = await res.json();
-    setSelectedMovie(data);
+  const fetchMovies = async (pageNumber = 1) => {
+    try {
+      const res = await fetch(
+        `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&page=${pageNumber}`
+      );
+      const data = await res.json();
+      if (pageNumber === 1) {
+        setMovies(data.results);
+      } else {
+        setMovies(prev => [...prev, ...data.results]);
+      }
+      setHasMore(pageNumber < data.total_pages);
+    } catch (err) {
+      console.error('Error fetching movies:', err);
+    }
   };
+
+    useEffect(() => {
+        fetchMovies(1);
+    }, []);
+
+    const handleLoadMore = () => {
+        const nextPage = page + 1;
+        fetchMovies(nextPage);
+        setPage(nextPage);
+    };
+
+    const handleMovieClick = async (movieId) => {
+        const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`);
+        const data = await res.json();
+        setSelectedMovie(data);
+    };
+    
     const getSortedMovies = () => {
         const sorted = [...movies];
         switch (sortBy) {
@@ -45,11 +69,16 @@ const MovieList = () => {
                 <option value="release_date">Release Date (Newest First)</option>
                 <option value="rating">Rating (High to Low)</option>
             </select>
-        <div className="movie-list">
-            {sortedMovies.map(movie => (
-                <MovieCard key={movie.id} movie={movie} onClick={handleMovieClick} />
-            ))}
-        </div>
+            <div className="movie-list">
+                {sortedMovies.map(movie => (
+                    <MovieCard key={movie.id} movie={movie} onClick={handleMovieClick} />
+                ))}
+            </div>
+            {hasMore && (
+                <button onClick={handleLoadMore} className="load-more">
+                Load More
+                </button>
+            )}
             <MovieModal movie={selectedMovie} onClose={() => setSelectedMovie(null)} />
         </main>
     );

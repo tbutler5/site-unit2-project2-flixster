@@ -1,5 +1,4 @@
 const MovieCard = ({ movie, onClick }) => {
-    console.log(movie.title, movie.poster_path);
     return (
         <div className="movie-card" onClick={() => onClick(movie.id)}>
             <img   
