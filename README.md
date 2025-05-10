@@ -102,7 +102,7 @@ Deployed Application (): [Flixster Deployed Site](https://site-unit2-project2-fl
 
 ### Walkthrough Video
 
-https://www.loom.com/share/fa14b9b3630f406ea99b8dc4cc5bbb68?sid=4c298c89-c1f2-4a64-b77f-3a58e8e87769
+https://www.loom.com/share/4d8ef321ce324801868b615d1461dfb0?sid=945ad803-48bb-4c7e-8e6e-edb9b152ce59
 
 ### Reflection
 
